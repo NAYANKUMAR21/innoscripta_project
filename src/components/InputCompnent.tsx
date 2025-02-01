@@ -4,8 +4,8 @@ export default function InputComponent({
   DateHandler,
 }: {
   type: string;
-  titleHandler?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  DateHandler?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  titleHandler?: React.ChangeEventHandler<HTMLInputElement>;
+  DateHandler?: React.ChangeEventHandler<HTMLInputElement>;
 }) {
   return (
     <div className="w-full max-w-full min-w-[200px] ">

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import GetSourceData from '../utils/FetchData';
 import NewsCard from '../components/NewsCard';
 import Loader from '../components/Loader';
@@ -14,6 +14,11 @@ interface ResponseObjectType {
   category?: string;
 }
 export function HomePage2() {
+  const [titleFilter, setTitleFilter] = useState<string>('');
+  const [dateFilter, setDateFilter] = useState<string>('');
+  const [CategoryFilter, setCategoryFilter] = useState<string>('');
+  const [SourceFilter, setSourceFilter] = useState<string>('');
+
   const [loading, setloading] = useState<boolean>(false);
   const [Skeleton] = useState(new Array(10).fill(0));
   const [NewsData, setNewData] = useState<{
@@ -24,40 +29,47 @@ export function HomePage2() {
     responseData: [],
   });
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    type: 'title' | 'date' | 'category' | 'source'
-  ) => {
-    const DataCopy = [...NewsData.CopyData];
-    const InputValue = e.target.value.toLocaleLowerCase();
-    let SearhData;
+  const handleInputChange = useMemo(() => {
+    let DataCopy = [...NewsData.CopyData];
 
-    if (type === 'title') {
-      SearhData = DataCopy.filter((ele) =>
-        ele.title.toLocaleLowerCase().includes(InputValue)
+    console.log(titleFilter, dateFilter, SourceFilter, CategoryFilter);
+
+    if (titleFilter.trim() !== '') {
+      DataCopy = DataCopy.filter((ele) =>
+        ele.title.toLocaleLowerCase().includes(titleFilter.toLocaleLowerCase())
       );
-    } else if (type === 'date') {
-      SearhData = DataCopy.filter((ele) =>
+      console.log(titleFilter, DataCopy);
+    }
+    if (dateFilter.trim() !== '') {
+      DataCopy = DataCopy.filter((ele) =>
         new Date(ele.publishedAt)
           .toISOString()
           .split('T')[0]
-          .includes(InputValue)
-      );
-    } else if (type === 'category') {
-      SearhData = DataCopy.filter((ele) =>
-        ele.category?.toLocaleLowerCase().includes(InputValue)
-      );
-    } else if (type === 'source') {
-      SearhData = DataCopy.filter((ele) =>
-        ele.source.toLocaleLowerCase().includes(InputValue)
+          .includes(dateFilter.trim())
       );
     }
+    if (CategoryFilter.trim() !== '') {
+      DataCopy = DataCopy.filter((ele) =>
+        ele.category
+          ?.toLocaleLowerCase()
+          .includes(CategoryFilter.trim().toLocaleLowerCase())
+      );
+    }
+    if (SourceFilter.trim() !== '') {
+      DataCopy = DataCopy.filter((ele) =>
+        ele.source
+          .toLocaleLowerCase()
+          .includes(SourceFilter.trim().toLocaleLowerCase())
+      );
+    }
+    console.log(DataCopy);
 
-    if (InputValue === '') {
-      return setNewData({ ...NewsData, responseData: DataCopy });
-    }
-    return setNewData({ ...NewsData, responseData: SearhData || [] });
-  };
+    // if (!SourceFilter || !titleFilter || !CategoryFilter || !dateFilter) {
+    //   return setNewData({ ...NewsData, responseData: NewsData.CopyData });
+    // }
+
+    return setNewData({ ...NewsData, responseData: DataCopy || [] });
+  }, [titleFilter, dateFilter, CategoryFilter, SourceFilter]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -89,14 +101,18 @@ export function HomePage2() {
                 <div className="flex flex-col w-full">
                   <InputComponent
                     type="text"
-                    titleHandler={(e) => handleInputChange(e, 'title')}
+                    titleHandler={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      setTitleFilter(e.target.value);
+                    }}
                   />
                 </div>
 
                 <div className="flex flex-col w-full">
                   <InputComponent
                     type="Date"
-                    DateHandler={(e) => handleInputChange(e, 'date')}
+                    DateHandler={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      setDateFilter(e.target.value);
+                    }}
                   />
                 </div>
 
@@ -104,7 +120,11 @@ export function HomePage2() {
                   <SelectComponent
                     category={CategoryData}
                     type="Category"
-                    CategoryHandler={(e) => handleInputChange(e, 'category')}
+                    CategoryHandler={(
+                      e: React.ChangeEvent<HTMLSelectElement>
+                    ) => {
+                      setCategoryFilter(e.target.value);
+                    }}
                   />
                 </div>
 
@@ -112,7 +132,11 @@ export function HomePage2() {
                   <SelectComponent
                     category={SourceData}
                     type="Source"
-                    SourceHandler={(e) => handleInputChange(e, 'source')}
+                    SourceHandler={(
+                      e: React.ChangeEvent<HTMLSelectElement>
+                    ) => {
+                      setSourceFilter(e.target.value);
+                    }}
                   />
                 </div>
               </>

@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import GetSourceData from '../utils/FetchData';
 import NewsCard from '../components/NewsCard';
 import Loader from '../components/Loader';
@@ -29,7 +29,7 @@ export function HomePage2() {
     responseData: [],
   });
 
-  const handleInputChange = useMemo(() => {
+  useMemo(() => {
     let DataCopy = [...NewsData.CopyData];
 
     console.log(titleFilter, dateFilter, SourceFilter, CategoryFilter);
@@ -144,10 +144,15 @@ export function HomePage2() {
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-          {loading &&
+          {loading == true ? (
             Skeleton.map(() => {
               return <Loader />;
-            })}
+            })
+          ) : NewsData.responseData.length == 0 ? (
+            <div className="w-52 m-auto text-center border border-gray-600 flex justify-center items-center rounded-md p-5">
+              <p className="text-white ">No results found</p>
+            </div>
+          ) : null}
 
           {!loading &&
             NewsData.responseData.map((ele, index) => {

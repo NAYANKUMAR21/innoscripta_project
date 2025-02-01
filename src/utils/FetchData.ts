@@ -1,48 +1,57 @@
 import axios from 'axios';
-import { GaurdianApi, NewsApi } from '../config/env.config';
+import { GaurdianApi, NewsApi, NewYorkApi } from '../config/env.config';
 import NormalizeNewsArticle from './NormalizationNews';
 
 export default async function GetSourceData() {
   const dataGaurdian = await fetchDatafromSource(GaurdianApi);
   const dataNewsApi = await fetchDatafromSource(NewsApi);
-  // const dataNewYork = await fetchDatafromSource(NewYorkApi);
+  const dataNewYork = await fetchDatafromSource(NewYorkApi);
   console.log(dataNewsApi);
 
   const GaurdianExtract = await ExtractArticlesDataFromSource(
     dataGaurdian,
     'gaurdianapi'
   );
-  // const NewYorkExtract = await ExtractArticlesDataFromSource(
-  //   dataNewYork,
-  //   'newyorkapi'
-  // );
+  const NewYorkExtract = await ExtractArticlesDataFromSource(
+    dataNewYork,
+    'newyorkapi'
+  );
   const NewsApiExtract = await ExtractArticlesDataFromSource(
     dataNewsApi,
     'newsapi'
   );
   // console.log(NewsApiExtract);
-  console.log([...GaurdianExtract, ...NewsApiExtract]);
+  const SourceData = [...GaurdianExtract, ...NewsApiExtract, ...NewYorkExtract];
+  console.log(SourceData);
+  localStorage.setItem('NewsSource', JSON.stringify(SourceData));
 
-  return [...GaurdianExtract, ...NewsApiExtract];
+  return SourceData;
 }
 
 async function fetchDatafromSource(APIArray: string[]) {
   // Create an array of promises for concurrent execution
-  const result = APIArray.map(async (api) => {
-    console.log(api);
-    if (api.includes('q=technology')) {
-      return { category: 'technology', result: await axios.get(api) };
-    } else if (api.includes('q=business')) {
-      return { category: 'business', result: await axios.get(api) };
-    } else if (api.includes('q=politics')) {
-      return { category: 'politics', result: await axios.get(api) };
+  try {
+    const result = APIArray.map(async (api) => {
+      console.log(api);
+      if (api.includes('q=technology')) {
+        return { category: 'technology', result: await axios.get(api) };
+      } else if (api.includes('q=business')) {
+        return { category: 'business', result: await axios.get(api) };
+      } else if (api.includes('q=politics')) {
+        return { category: 'politics', result: await axios.get(api) };
+      }
+    });
+
+    // Wait for all promises to resolve
+    const data = await Promise.all(result);
+
+    return data;
+  } catch (er: unknown) {
+    if (er instanceof Error) {
+      console.log(er.message);
     }
-  });
-
-  // Wait for all promises to resolve
-  const data = await Promise.all(result);
-
-  return data;
+    return console.log('Something went wrong');
+  }
 }
 
 function NormalisedData(Data: any, source: string, category: string) {
@@ -53,7 +62,13 @@ function NormalisedData(Data: any, source: string, category: string) {
 }
 
 async function ExtractArticlesDataFromSource(SourceData: any, source: string) {
-  let result = [];
+  let result: any[] = [];
+
+  // Add a check to ensure SourceData is defined and is an array
+  if (!Array.isArray(SourceData) || SourceData.length === 0) {
+    console.error('SourceData is undefined or not an array');
+    return result; // Return an empty array or handle as needed
+  }
 
   if (source == 'newsapi') {
     console.log(SourceData);

@@ -25,7 +25,7 @@ const NewsCard: React.FC<NewsCardProps> = ({ article }) => {
   }
 
   return (
-    <div className="max-w-md mx-auto bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
+    <div className="max-w-md mx-auto bg-black rounded-2xl shadow-lg overflow-hidden text-white p-10 border border-gray-500">
       {/* {article.image && (
         <>
           <img
@@ -39,11 +39,11 @@ const NewsCard: React.FC<NewsCardProps> = ({ article }) => {
       <div className="p-4">
         {/* New category display */}
         {article.category && (
-          <span className="inline-block bg-green-200 text-green-800 text-xs font-semibold px-2 py-1 rounded-full mb-2">
+          <span className="inline-block bg-white text-green-800 text-xs font-semibold px-2 py-1 rounded-full mb-2">
             {article.category}
           </span>
         )}
-        <h2 className="text-xl font-semibold text-gray-800">{article.title}</h2>
+        <h2 className="text-xl font-semibold text-white">{article.title}</h2>
         <p className="text-sm text-gray-500">
           {article.source} •{' '}
           {new Date(article.publishedAt).toLocaleDateString()}

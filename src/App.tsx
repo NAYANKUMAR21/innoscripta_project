@@ -14,7 +14,7 @@ export default function App() {
   // console.log(import.meta.env[`VITE_GUARDIAN_API_KEY`]);
 
   return (
-    <div>
+    <div className="bg-black">
       <Routes>
         <Route path="/" element={<HomePage2 />} />
       </Routes>

@@ -1,10 +1,13 @@
 # innoscripta
 
-## Take home Case Study
-
 ---
 
 # 📰 News Aggregator - React & TypeScript
+
+
+---
+
+![Image Link](https://res.cloudinary.com/dc3akfh6t/image/upload/v1738481809/rkcm5bv19oyqdak0n4ox.png)
 
 ## 📌 Project Overview
 
@@ -47,6 +50,17 @@ The application is fully **containerized with Docker** for easy deployment and r
 - **Storage**: IndexedDB / LocalStorage for caching API responses
 - **Containerization**: Docker
 
+## 🐳 Running with Docker
+
+1. **Build the Docker Image**
+   ```sh
+   docker build -t nayankumar1998/newsapp .
+   ```
+2. **Run the Container**
+   ```sh
+   docker run -p 5173:5173 nayankumar1998/newsapp
+   ```
+
 ## 📦 Installation & Setup
 
 ### 1️⃣ Clone the Repository
@@ -85,16 +99,6 @@ npm run dev
 
 Then open [http://localhost:5173](http://localhost:5173) in your browser.
 
-## 🐳 Running with Docker
-
-1. **Build the Docker Image**
-   ```sh
-   docker build -t nayankumar1998/newsapp .
-   ```
-2. **Run the Container**
-   ```sh
-   docker run -p 5173:5173 nayankumar1998/newsapp
-   ```
 
 ## 🎯 Best Practices Followed
 

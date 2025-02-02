@@ -49,6 +49,27 @@ The application is fully **containerized with Docker** for easy deployment and r
 - **Storage**: IndexedDB / LocalStorage for caching API responses
 - **Containerization**: Docker
 
+## Running the Application with Docker Compose
+
+Please clone the github To start the services defined in docker-compose.yml, move to project directory and run the following command:
+
+```
+cd innoscripta_project
+docker compose up -d
+```
+To stop the container:
+```
+docker compose down
+```
+
+This will:
+
+ - Pull necessary images (if not already available locally)
+ - Create and start the defined services in detached mode (-d runs in the background)
+  
+Once the compose command is successfull. Please run the respective commands give below as the second point to start the container on port 3000.
+
+
 ## 🐳 Running with Docker
 
 1. **Build the Docker Image**
@@ -57,7 +78,7 @@ The application is fully **containerized with Docker** for easy deployment and r
    ```
 2. **Run the Container**
    ```sh
-   docker run -p 5173:5173 nayankumar1998/newsapp
+   docker run -p 3000:5173 nayankumar1998/innoscripta-web
    ```
 
 ## 📦 Installation & Setup

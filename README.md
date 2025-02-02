@@ -4,7 +4,6 @@
 
 # 📰 News Aggregator - React & TypeScript
 
-
 ---
 
 ![Image Link](https://res.cloudinary.com/dc3akfh6t/image/upload/v1738481809/rkcm5bv19oyqdak0n4ox.png)
@@ -98,7 +97,6 @@ npm run dev
 ```
 
 Then open [http://localhost:5173](http://localhost:5173) in your browser.
-
 
 ## 🎯 Best Practices Followed
 

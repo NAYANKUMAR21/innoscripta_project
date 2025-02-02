@@ -1,52 +1,104 @@
 # innoscripta
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Take home Case Study
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# 📰 News Aggregator - React & TypeScript
 
-## Expanding the ESLint configuration
+## 📌 Project Overview
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+This is a **news aggregator** web application built with **React.js** and **TypeScript**. It allows users to browse, search, and filter news articles from multiple sources, creating a personalized news feed.
 
-- Configure the top-level `parserOptions` property like this:
+The application is fully **containerized with Docker** for easy deployment and reproducibility.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 🚀 Features
+
+✅ **Article Search & Filtering**:
+
+- Search for articles by **keyword**.
+- Filter results by **date**, **category**, and **source**.
+
+✅ **Personalized News Feed**:
+
+- Users can **select** preferred sources, categories, and authors to customize their feed.
+
+✅ **Mobile-Responsive Design**:
+
+- The UI is optimized for **desktop, tablet, and mobile** devices.
+
+✅ **API Integration**:
+
+- Articles are fetched from **at least three news sources**, such as:
+  - NewsAPI
+  - The Guardian
+  - New York Times
+
+✅ **Docker Support**:
+
+- The app can be run inside a **Docker container** for a consistent environment across systems.
+
+## 🏗️ Tech Stack
+
+- **Frontend**: React.js, TypeScript
+- **Styling**: Tailwind CSS / Styled Components
+- **Data Fetching**: Axios
+- **API Integration**: NewsAPI, Gaurdian News, The New York Times, etc.
+- **Storage**: IndexedDB / LocalStorage for caching API responses
+- **Containerization**: Docker
+
+## 📦 Installation & Setup
+
+### 1️⃣ Clone the Repository
+
+```sh
+git clone https://github.com/NAYANKUMAR21/innoscripta_project.git
+cd innoscripta_project
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### 2️⃣ Install Dependencies
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```sh
+npm install
 ```
 
+### 3️⃣ Set Up Environment Variables
+
+Create a `.env` file in the root directory and add your API keys:
+
+```env
+VITE_GUARDIAN_API_KEY = your_api_key
+VITE_NYT_API_KEY = your_api_key
+VITE_NEWS_API_KEY = your_api_key
+
+VITE_GUARDIAN_API_BASE_URL = your_base_url
+VITE_NYT_API_BASE_URL = your_base_url
+VITE_NEWS_API_BASE_URL = your_base_url
+
+```
+
+### 4️⃣ Run the Development Server
+
+```sh
+npm run dev
+```
+
+Then open [http://localhost:5173](http://localhost:5173) in your browser.
+
+## 🐳 Running with Docker
+
+1. **Build the Docker Image**
+   ```sh
+   docker build -t nayankumar1998/newsapp .
+   ```
+2. **Run the Container**
+   ```sh
+   docker run -p 5173:5173 nayankumar1998/newsapp
+   ```
+
+## 🎯 Best Practices Followed
+
+- **DRY & KISS**: Minimized redundant code, keeping components simple and reusable.
+- **SOLID Principles**: Ensured modular and extensible design.
+- **Efficient API Handling**: Implemented **IndexedDB caching** to reduce unnecessary API calls.
+- **Normalisation of Data**: Data Fetched from various api's and convert them to one single format.

@@ -1,6 +1,5 @@
-// config/env.ts
+// Purpose: Get environment variables from the .env file
 
-// Validate environment variables
 export const getEnvVar = (key: string): string => {
   const value = import.meta.env[`${key}`];
   if (!value) {

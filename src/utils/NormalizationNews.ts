@@ -1,6 +1,6 @@
 export default function NormalizeNewsArticle(
   article: {
-    // Existing fields
+    // Common fields
     title?: string;
     webTitle?: string;
     publishedAt?: string;
@@ -53,7 +53,7 @@ export default function NormalizeNewsArticle(
   category: string
 ) {
   return {
-    // Core fields with enhanced fallback chain
+    // Core fields
     title:
       article.title ||
       article.webTitle ||
@@ -103,16 +103,12 @@ export default function NormalizeNewsArticle(
 
     documentType: article.document_type || article.type,
 
-    // Source-specific metadata
     sourceMetadata: {
-      // Guardian specific
       isHosted: article.isHosted,
       pillarId: article.pillarId,
 
-      // NewsAPI specific
       sourceId: article.source?.id,
 
-      // Common
       sectionId: article.sectionId,
     },
   };

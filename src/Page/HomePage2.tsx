@@ -4,7 +4,8 @@ import NewsCard from '../components/NewsCard';
 import Loader from '../components/Loader';
 import SelectComponent from '../components/SelectComponent';
 import InputComponent from '../components/InputCompnent';
-import { CategoryData, SourceData } from '../utils/SelectData';
+import { CategoryData, SourceData } from '../utils/Category_and_SourceData';
+
 interface ResponseObjectType {
   title: string;
   source: string;
@@ -63,10 +64,6 @@ export function HomePage2() {
       );
     }
     console.log(DataCopy);
-
-    // if (!SourceFilter || !titleFilter || !CategoryFilter || !dateFilter) {
-    //   return setNewData({ ...NewsData, responseData: NewsData.CopyData });
-    // }
 
     return setNewData({ ...NewsData, responseData: DataCopy || [] });
   }, [titleFilter, dateFilter, CategoryFilter, SourceFilter]);

@@ -1,26 +1,28 @@
 import axios from 'axios';
-import { GaurdianApi, NewsApi, NewYorkApi } from '../config/env.config';
+import {
+  AllGaurdianApis,
+  AllNewYorkApis,
+  AllNewsApis,
+} from '../config/env.config';
 import NormalizeNewsArticle from './NormalizationNews';
+import { categories } from './Category_and_SourceData';
+
+async function fetchDataAndExtract(APIs: string[], sourceType: string) {
+  const data = await fetchDatafromSource(APIs);
+  return await ExtractArticlesDataFromSource(data, sourceType);
+}
 
 export default async function GetSourceData() {
-  const dataGaurdian = await fetchDatafromSource(GaurdianApi);
-  const dataNewsApi = await fetchDatafromSource(NewsApi);
-  const dataNewYork = await fetchDatafromSource(NewYorkApi);
-  console.log(dataNewsApi);
-
-  const GaurdianExtract = await ExtractArticlesDataFromSource(
-    dataGaurdian,
+  const GaurdianExtract = await fetchDataAndExtract(
+    AllGaurdianApis,
     'gaurdianapi'
   );
-  const NewYorkExtract = await ExtractArticlesDataFromSource(
-    dataNewYork,
+  const NewYorkExtract = await fetchDataAndExtract(
+    AllNewYorkApis,
     'newyorkapi'
   );
-  const NewsApiExtract = await ExtractArticlesDataFromSource(
-    dataNewsApi,
-    'newsapi'
-  );
-  // console.log(NewsApiExtract);
+  const NewsApiExtract = await fetchDataAndExtract(AllNewsApis, 'newsapi');
+
   const SourceData = [...GaurdianExtract, ...NewsApiExtract, ...NewYorkExtract];
   console.log(SourceData);
   localStorage.setItem('NewsSource', JSON.stringify(SourceData));
@@ -29,20 +31,22 @@ export default async function GetSourceData() {
 }
 
 async function fetchDatafromSource(APIArray: string[]) {
-  // Create an array of promises for concurrent execution
   try {
     const result = APIArray.map(async (api) => {
-      console.log(api);
-      if (api.includes('q=technology')) {
-        return { category: 'technology', result: await axios.get(api) };
-      } else if (api.includes('q=business')) {
-        return { category: 'business', result: await axios.get(api) };
-      } else if (api.includes('q=politics')) {
-        return { category: 'politics', result: await axios.get(api) };
+      const category = Object.keys(categories).find((key) =>
+        api.includes(key)
+      ) as keyof typeof categories;
+      console.log(category);
+      if (category) {
+        const response = await axios.get(api);
+        console.log(response);
+        if (response.status !== 200) {
+          return { category: categories[category], result: {} };
+        }
+        return { category: categories[category], result: response };
       }
     });
 
-    // Wait for all promises to resolve
     const data = await Promise.all(result);
 
     return data;
@@ -64,17 +68,17 @@ function NormalisedData(Data: any, source: string, category: string) {
 async function ExtractArticlesDataFromSource(SourceData: any, source: string) {
   let result: any[] = [];
 
-  // Add a check to ensure SourceData is defined and is an array
   if (!Array.isArray(SourceData) || SourceData.length === 0) {
     console.error('SourceData is undefined or not an array');
-    return result; // Return an empty array or handle as needed
+    return result;
   }
 
   if (source == 'newsapi') {
     console.log(SourceData);
     for (let i = 0; i < SourceData.length; i++) {
-      const responseData = SourceData[i].result.data.articles.slice(1, 5);
-      // result.push(...responseData);
+      const responseData =
+        SourceData[i] && SourceData[i].result.data.articles.slice(1, 5);
+
       const NormalisedNewsData = await NormalisedData(
         [...responseData],
         'The News API',
@@ -84,7 +88,8 @@ async function ExtractArticlesDataFromSource(SourceData: any, source: string) {
     }
   } else if (source == 'gaurdianapi') {
     for (let i = 0; i < SourceData.length; i++) {
-      const responseData = SourceData[i].result.data.response.results;
+      const responseData =
+        SourceData[i] && SourceData[i].result.data.response.results;
       const NormalisedGaurdData = await NormalisedData(
         [...responseData],
         'The Gaurdian',
@@ -94,7 +99,8 @@ async function ExtractArticlesDataFromSource(SourceData: any, source: string) {
     }
   } else if (source == 'newyorkapi') {
     for (let i = 0; i < SourceData.length; i++) {
-      const responseData = SourceData[i].result.data.response.docs;
+      const responseData =
+        SourceData[i] && SourceData[i].result.data.response.docs;
       const NormalisedNYData = await NormalisedData(
         [...responseData],
         'The New York Times',

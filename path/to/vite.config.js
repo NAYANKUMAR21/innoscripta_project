@@ -9,4 +9,5 @@ export default defineConfig({
     proxy: {}, // Add this empty proxy object
     allowedHosts: 'all',
   },
+  build: { outDir: 'dist' },
 });

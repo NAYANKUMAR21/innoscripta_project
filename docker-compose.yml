@@ -1,0 +1,14 @@
+version: '1'
+services:
+  web:
+    build: .
+    ports:
+      - '5173:5173'
+    environment:
+      - VITE_GUARDIAN_API_KEY=64efb3b6-8c36-4dbc-8312-969a5ae4c9eb
+      - VITE_NYT_API_KEY=mFXOUgZD7SF7P6EXUYAaC9pJP6f682s6
+      - VITE_NEWS_API_KEY=27499d47246f450c91cd93b3ac0451a6
+      - VITE_GUARDIAN_API_BASE_URL=https://content.guardianapis.com/search
+      - VITE_NYT_API_BASE_URL=https://api.nytimes.com/svc/search/v2/articlesearch.json
+      - VITE_NEWS_API_BASE_URL=https://newsapi.org/v2/everything
+    
